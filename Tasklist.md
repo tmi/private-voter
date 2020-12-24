@@ -21,6 +21,7 @@
 ## 2. Docker replaced with docker-compose and external SQL is introduced
 * () TBD
 * () In-memory cache for the DB reads
+* () Prometheus instance for local deployments and testing
 
 ## 3. App separated into two plus queue is introduced
 * () TBD
