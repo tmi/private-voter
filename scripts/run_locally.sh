@@ -8,9 +8,9 @@ cd $DIR/..
 # we instead do this:
 source `conda info --base`/etc/profile.d/conda.sh
 
-conda activate privacy-voter
+conda activate private-voter
 
 
-export FLASK_APP="webapp/app.py"
+export FLASK_APP="webapp/src/app.py"
 
 python -m flask run --host='0.0.0.0' --port=80
