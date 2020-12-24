@@ -4,6 +4,6 @@ cd $DIR/..
 
 source `conda info --base`/etc/profile.d/conda.sh
 conda activate private-voter
-pip freeze > webapp_requirements.txt
+pip freeze > requirements.txt
 
 docker build -t private-voter -f docker/Dockerfile .

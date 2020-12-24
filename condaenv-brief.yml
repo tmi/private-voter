@@ -1,8 +1,8 @@
-name: privacy-voter
+name: private-voter
 channels:
   - defaults
 dependencies:
   - python=3.7
   - flask
-prefix: /Users/vojtech.tuma/miniconda3/envs/privacy-voter
+prefix: /Users/vojtech.tuma/miniconda3/envs/private-voter
 
