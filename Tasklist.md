@@ -5,8 +5,8 @@
 * (/) Flask app skeleton
 * (/) Plain docker image
 * (/) Proper logging and basic config file
-* () Proper metrics
-* () `Status` endpoint, or rather, readiness + liveness probe
+* (/) Proper metrics
+* (/) `Status` endpoint, or rather, readiness + liveness probe
 * () `Create` endpoint dummily accepting parameters
 * () `Vote` endpoint dummily accepting parameters
 * () Externally specifiable config file
