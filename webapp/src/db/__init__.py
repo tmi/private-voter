@@ -1,16 +1,22 @@
 import sqlite3
 
-# TODO
-votesTable = """create table voted (
+votedTable = """create table voted (
+voted_randomId text primary key,
 pollId text,
-randomVoterId text,
-votedId text)"""
+votedId text
+)"""
 
-# TODO
 voterTable = """create table voter (
+voter_randomId text primary key,
 pollId text,
 voterId text,
 isGenerated integer
+)"""
+
+pollsTable = """create table polls (
+pollId text primary key,
+extraVotesMin integer,
+extraVotesMax integer
 )"""
 
 # for readiness probe
@@ -41,6 +47,9 @@ def initLocalDb():
 
     connection = DbWrapper.getConnection() # possibly to be done in the main method, if made robust
     connection.execute(testTable)
+    connection.execute(voterTable)
+    connection.execute(votedTable)
+    connection.execute(pollsTable)
     connection.commit()
 
 def initDb(mode):

@@ -10,11 +10,11 @@
 * (/) `Create` endpoint dummily accepting parameters
 * (/) `Vote` endpoint dummily accepting parameters
 * (/) In-memory DB added to dependencies and initialised with a test write, as a part of readiness probe
-* () DDL statements
-* () Externally specifiable config file
+* (/) DDL statements
+* () `Create` endpoint to check if pollId is free and persist its input parameters
 * () `Vote` endpoint to check first whether the voter is elligible and pollName exists
-* () `Create` endpoint to persist its input parameters
 * () `Vote` endpoint to persist its input parameters according to poll's settings
+* () Externally specifiable config file
 * () PyTest + Flask test suite
 * () Switch from development to production server
 * () Minikube deployment (not supporting multi-instance deployment)
