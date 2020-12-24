@@ -2,8 +2,10 @@
 
 ## 1. Single flask app in docker with in-memory SQL with `/create` and `/vote` without any reliability or queing or caching
 * (/) Conda env
-* () Flask app skeleton
+* (/) Flask app skeleton
 * () Plain docker image
+* () Proper logging
+* () Proper metrics
 * () `Status` endpoint, or rather, readiness + liveness probe
 * () `Create` endpoint dummily accepting parameters
 * () `Vote` endpoint dummily accepting parameters
@@ -13,6 +15,7 @@
 * () `Create` endpoint to persist its input parameters
 * () `Vote` endpoint to persist its input parameters according to poll's settings
 * () PyTest + Flask test suite
+* () Switch from development to production server
 
 ## 2. Docker replaced with docker-compose and external SQL is introduced
 * () TBD
