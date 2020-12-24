@@ -9,7 +9,7 @@
 * (/) `Status` endpoint, or rather, readiness + liveness probe
 * (/) `Create` endpoint dummily accepting parameters
 * (/) `Vote` endpoint dummily accepting parameters
-* () In-memory DB added to dependencies and initialised with a test write, as a part of readiness probe
+* (/) In-memory DB added to dependencies and initialised with a test write, as a part of readiness probe
 * () DDL statements
 * () Externally specifiable config file
 * () `Vote` endpoint to check first whether the voter is elligible and pollName exists

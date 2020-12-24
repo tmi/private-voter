@@ -4,28 +4,36 @@ import config
 import metrics
 import utils
 import json
+import db
 
 initFinalised = False
 application = flask.Flask(__name__)
 
 @application.route('/status', methods = ['GET'])
 def statusCall(): # to be used as a liveness probe
-    logging.info("/status call received")
-    metrics.httpEndpointCounter.labels(method = 'get', endpoint = '/status').inc()
-    return "long live and prosper\n"
+    try:
+        logging.info("/status call received")
+        metrics.httpEndpointCounter.labels(method = 'get', endpoint = '/status').inc()
+        return "long live and prosper\n"
+    except Exception as e:
+        return flask.Response(f"/status call failed due to {e}", status = 400, mimetype = 'text/plain')
 
 @application.route('/readiness', methods = ['GET'])
 def readinessCall():
-    # TODO create a decorator that would automatically add the logging and metrics calls
-    logging.info("/readiness call received")
-    metrics.httpEndpointCounter.labels(method = 'get', endpoint = '/readiness').inc()
+    try:
+        # TODO create a decorator that would automatically add the logging and metrics calls
+        logging.info("/readiness call received")
+        metrics.httpEndpointCounter.labels(method = 'get', endpoint = '/readiness').inc()
 
-    global initFinalised
-    # once we have DB and Queue clients, we will check their instantiation here
-    if (initFinalised):
+        global initFinalised
+        if (not initFinalised):
+            return flask.Response("init not finalised\n", status = 400, mimetype = 'text/plain')
+        if (not db.readinessCall()):
+            return flask.Response("database not ready\n", status = 400, mimetype = 'text/plain') # probably extraneous as unready database raises
         return flask.Response("all ready\n", status = 200, mimetype = 'text/plain')
-    else:
-        return flask.Response("init not finalised\n", status = 400, mimetype = 'text/plain')
+    except Exception as e:
+        return flask.Response(f"/readiness call failed due to {e}", status = 400, mimetype = 'text/plain')
+
 
 @application.route('/create/<pollName>', methods = ['POST'])
 def createPoll(pollName):
@@ -79,6 +87,8 @@ def main():
     config.initLogging()
     logging.debug("initialising metrics")
     metrics.initMetrics(application)
+    logging.debug("initialising database")
+    db.initDb("local") # TODO config
 
     logging.debug("application ready")
     global initFinalised
