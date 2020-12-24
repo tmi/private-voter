@@ -1,6 +1,7 @@
 # Development plan
 
 ## 1. Single flask app in docker with in-memory SQL with `/create` and `/vote` without any reliability or queing or caching
+* (/) Conda env
 * () Flask app skeleton
 * () Plain docker image
 * () `Status` endpoint, or rather, readiness + liveness probe
