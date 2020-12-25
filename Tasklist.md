@@ -15,7 +15,7 @@
 * (/) `Vote` endpoint to check first whether pollName exists and to persist its input parameters according to poll's settings
 * (/) `Report` endpoint to return poll's results in an aggregated form
 * (/) Externally specifiable config file
-* () PyTest + Flask test suite
+* (/) PyTest + Flask test suite
 * () Minikube deployment (not supporting multi-instance deployment)
 
 ## 2. Docker replaced with docker-compose and external SQL is introduced
@@ -45,3 +45,4 @@
 * () Throw differential privacy into the mix by allowing "switch of the true vote" to another option with certain probability
 * () Decorators for simplified arg-parse and logging handling
 * () extend `Report` endpoint with actuall stats analysis
+* () separate runtime and test dependencies

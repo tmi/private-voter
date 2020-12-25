@@ -2,7 +2,29 @@ name: private-voter
 channels:
   - defaults
 dependencies:
-  - python=3.7
-  - flask
+  - xz==5.2.5=h1de35cc_0
+  - readline==8.0=h1de35cc_0
+  - click==7.1.2=py_0
+  - ca-certificates
+  - zlib==1.2.11=h1de35cc_3
+  - jinja2==2.11.2=py_0
+  - libedit==3.1.20191231=h1de35cc_1
+  - tk==8.6.10=hb0a8c7a_0
+  - markupsafe==1.1.1=py37h1de35cc_0
+  - setuptools==51.0.0=py37hecd8cb5_2
+  - pip==20.3.3=py37hecd8cb5_0
+  - flask==1.1.2=py_0
+  - libcxx==10.0.0=1
+  - certifi
+  - itsdangerous==1.1.0=py37_0
+  - wheel==0.36.2=pyhd3eb1b0_0
+  - sqlite==3.33.0=hffcf06c_0
+  - ncurses==6.2=h0a44026_1
+  - libffi==3.3=hb1e8313_2
+  - werkzeug==1.0.1=py_0
+  - python==3.7.9=h26836e1_0
+  - openssl
+  - prometheus_client
+  - pytest
 prefix: /Users/vojtech.tuma/miniconda3/envs/private-voter
 
