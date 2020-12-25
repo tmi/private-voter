@@ -5,5 +5,6 @@ cd $DIR
 
 # export FLASK_APP="src/app.py"
 export FLASK_APP="privateVoterFront.zip/privateVoterFront"
+echo "iniFile: $INI_FILE"
 
 python -m flask run --host='0.0.0.0' --port=80

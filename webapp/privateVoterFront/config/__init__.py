@@ -1,12 +1,18 @@
 from configparser import ConfigParser
 import logging
-import sys, io, pkg_resources
+import os, sys, io, pkg_resources
 
 configs = ConfigParser()
 
 def initDefault():
     with pkg_resources.resource_stream("privateVoterFront.config", "default.ini") as defaultConfigStream:
         configs.read_file(io.TextIOWrapper(defaultConfigStream))
+    valueOption = os.environ.get("INI_FILE")
+    if (valueOption):
+        fname = valueOption.strip()
+        if not os.path.exists(fname):
+            raise FileNotFoundError(f"not found config file {fname}")
+        configs.read(fname)
 
 def initLogging():
     target = configs.get("LOGGING", "TARGET")

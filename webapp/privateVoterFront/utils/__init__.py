@@ -29,7 +29,7 @@ def parsePollParams(jsonContent: Dict[str, Any], pollName: str) -> PollParams:
     maxOptionsLength = int(config.get("DB", "MAXOPTLEN"))
     def hasValOfType(content: Dict[str, Any], valName: str, valType: Type[T], extraCheck: Callable[[T], bool]) -> bool:
         return (valName in content) and (type(content[valName]) == valType) and extraCheck(content[valName])
-    assertPredicateReport(hasValOfType(jsonContent, "options", str, lambda s : len(s) > 0 and len(s) < maxOptionsLength), "createPollOptionsMissing", "/create poll call missing 'options' string param")
+    assertPredicateReport(hasValOfType(jsonContent, "options", str, lambda s : len(s) > 0 and len(s) < maxOptionsLength), "createPollOptionsMissing", "/create poll call missing valid 'options' string param")
     options = jsonContent["options"]
     if (hasValOfType(jsonContent, "extraVotes", int, lambda d: d >= 0)):
         extraVotesMin = jsonContent["extraVotes"]

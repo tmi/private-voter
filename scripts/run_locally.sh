@@ -12,5 +12,6 @@ conda activate private-voter
 
 
 export FLASK_APP="webapp/privateVoterFront"
+export INI_FILE="scripts/local_run.ini"
 
 python -m flask run --host='0.0.0.0' --port=80

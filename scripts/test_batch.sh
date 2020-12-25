@@ -1,6 +1,9 @@
 #!/bin/bash
-# set -x
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $DIR/
 source test_suite.sh
+# set -x
+
 
 echo "Rudimentary checks, all should pass"
 status
