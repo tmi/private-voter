@@ -26,3 +26,7 @@ function createPoll() {
 function votePoll() {
         curl -k -XPOST ${URL}:${PORT}/vote/${1}?voterId=${2}\&votedOption=${3}
 }
+
+function report() {
+	curl -s -k -XGET ${URL}:${PORT}/report/${POLL_ID} | python -m json.tool
+}

@@ -86,6 +86,30 @@ def vote(pollName):
         logging.error(f"encountered {e}")
         return flask.Response(f"error handling stuff because of {e}\n", status = 400, mimetype='text/plain')
 
+@application.route('/report/<pollName>', methods = ['GET'])
+def report(pollName):
+    try:
+        logging.info(f"/report call received for poll {pollName}")
+        metrics.httpEndpointCounter.labels(method = 'get', endpoint = '/report').inc()
+
+        logging.debug(f"getting voted report for {pollName}")
+        votedReport = db.getVotedReport(pollName)
+        logging.debug(f"received voted report {votedReport} for {pollName}")
+        logging.debug(f"getting voter report for {pollName}")
+        voterReport = db.getVoterReport(pollName)
+        logging.debug(f"received voter report {voterReport} for {pollName}")
+        logging.debug(f"combining voting reports for {pollName}")
+        combiReport = utils.combineReports(votedReport, voterReport)
+
+        return flask.jsonify(combiReport)
+    except utils.InputError as e:
+        return flask.Response(e.message, status = 400, mimetype='text/plain')
+    except Exception as e:
+        logging.error(f"encountered {e}")
+        return flask.Response(f"error handling stuff because of {e}\n", status = 400, mimetype='text/plain')
+
+
+
 def main():
     logging.debug("application starting")
 

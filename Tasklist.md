@@ -13,7 +13,7 @@
 * (/) DDL statements
 * (/) `Create` endpoint to check if pollId is free and persist its input parameters
 * (/) `Vote` endpoint to check first whether pollName exists and to persist its input parameters according to poll's settings
-* () `Report` endpoint to return poll's results in an aggregated form
+* (/) `Report` endpoint to return poll's results in an aggregated form
 * () Externally specifiable config file
 * () PyTest + Flask test suite
 * () Minikube deployment (not supporting multi-instance deployment)
@@ -42,3 +42,4 @@
 * () Specifying the set of actors in advance
 * () Throw differential privacy into the mix by allowing "switch of the true vote" to another option with certain probability
 * () Decorators for simplified arg-parse and logging handling
+* () extend `Report` endpoint with actuall stats analysis

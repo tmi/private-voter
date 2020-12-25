@@ -36,3 +36,6 @@ createPoll
 echo "Missing voter id, should fail"
 export VOTER_ID=""
 votePoll $POLL_ID $VOTER_ID $VOTED_OPTION
+
+export POLL_ID="testpoll1"
+report

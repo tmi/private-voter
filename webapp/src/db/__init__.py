@@ -1,5 +1,5 @@
 import sqlite3
-from utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote
+from utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote, VoterReport, VotedReport
 from typing import Any, List
 import logging
 
@@ -9,14 +9,16 @@ pollId text,
 votedOption text
 )"""
 votedInsert = "insert into voted(voted_randomId, pollId, votedOption) values (?, ?, ?)"
+votedReport = "select votedOption, count(1) from voted where pollId = ? group by votedOption"
 
+# note -- voterId is null in case of generated votes
 voterTable = """create table voter (
 voter_randomId text primary key,
 pollId text,
-voterId text,
-isGenerated integer
+voterId text
 )"""
-voterInsert = "insert into voter(voter_randomId, pollId, voterId, isGenerated) values (?, ?, ?, ?)"
+voterInsert = "insert into voter(voter_randomId, pollId, voterId) values (?, ?, ?)"
+voterReport = "select count(distinct voterId) as realVoters, sum(voterId is not null) as realVotes, count(1) as totalVotes from voter where pollId = ?"
 
 pollsTable = """create table polls (
 pollId text primary key,
@@ -82,6 +84,17 @@ def getPollParams(pollName) -> PollParams:
 
 def persistVoting(voted: List[PrivatisedVote], voters: List[PublicVote]) -> None:
     c = getConnection()
-    c.executemany(voterInsert, ((e.randomId_voter, e.pollId, e.voterId, e.isGenerated) for e in voters))
+    c.executemany(voterInsert, ((e.randomId_voter, e.pollId, e.voterId) for e in voters))
     c.executemany(votedInsert, ((e.randomId_voted, e.pollId, e.votedOption) for e in voted))
     c.commit()
+
+def getVoterReport(pollName: str) -> VoterReport:
+    c = getConnection()
+    # TODO check if poll exists
+    realVoters, realVotes, totalVotes = c.execute(voterReport, (pollName,)).fetchone()
+    return VoterReport(realVoters, realVotes if realVotes is not None else 0, totalVotes)
+
+def getVotedReport(pollName: str) -> List[VotedReport]:
+    c = getConnection()
+    # TODO check if poll exists
+    return [VotedReport(optionName, optionVotes) for optionName, optionVotes in c.execute(votedReport, (pollName,)).fetchall()]

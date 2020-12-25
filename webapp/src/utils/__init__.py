@@ -51,7 +51,6 @@ class PublicVote(NamedTuple):
     randomId_voter: str
     pollId: str
     voterId: str
-    isGenerated: int
 
 # so this fction takes a single received vote, augments it with randomly generated votes, splits into a "public" voter part and "private" voted part, and shuffles each independently, to be persisted in respective tables
 def privateVotingBusinessLogic(votedOption: str, voterId: str, pollParams: PollParams) -> Tuple[List[PrivatisedVote], List[PublicVote]]:
@@ -60,9 +59,28 @@ def privateVotingBusinessLogic(votedOption: str, voterId: str, pollParams: PollP
     allOptions = list(set(pollParams.options.split(":")))
     assertPredicateReport(votedOption in allOptions, "voteOptionNotAllowed", "/vote for option that wasnt specified during /create")
     votedOptions = random.choices(allOptions, k = extraVotes) + [votedOption]
-    voterIds = [(str(uuid.uuid4()), 1) for i in range(extraVotes)] + [(voterId, 0)]
+    voterIds = [None for i in range(extraVotes)] + [voterId]
     privateParts = [PrivatisedVote(str(uuid.uuid4()), pollParams.pollId, votedOption) for votedOption in votedOptions]
-    publicParts = [PublicVote(str(uuid.uuid4()), pollParams.pollId, voterId, isGenerated) for voterId, isGenerated in voterIds]
+    publicParts = [PublicVote(str(uuid.uuid4()), pollParams.pollId, voterId) for voterId in voterIds]
     random.shuffle(privateParts)
     random.shuffle(publicParts)
     return (privateParts, publicParts)
+
+class VoterReport(NamedTuple):
+    realVoters: int
+    realVotes: int
+    totalVotes: int
+
+class VotedReport(NamedTuple):
+    optionName: str
+    optionVotes: int
+
+def combineReports(votedReport: VoterReport, voterReport: VotedReport) -> Dict[str, Any]: # possibly replace Any with recusive type
+    # this is really ugly
+    d = {}
+    d['totalVotes'] = voterReport.totalVotes
+    d['realVotes'] = voterReport.realVotes
+    d['generatedVotes'] = voterReport.totalVotes - voterReport.realVotes
+    d['realVoters'] = voterReport.realVoters
+    d['duplicatedVotes'] = voterReport.realVotes - voterReport.realVoters
+    return {'voterStats': d, 'optionStats': [{"optionName": optionName, "optionVotes": optionVotes} for optionName, optionVotes in votedReport]}
