@@ -50,7 +50,10 @@ def createPoll(pollName):
         except json.decoder.JSONDecodeError as e:
             utils.assertPredicateReport(False, "createPollContentNotValid", "/create call not having valid json body")
         utils.assertPredicateReport(bool(content), "createPollContentNotPresent", "/create call missing the json body")
-        # TODO impl
+
+        pollParams = utils.parsePollParams(content, pollName)
+        db.persistCreatePoll(pollParams)
+
         return f"ok: poll {pollName} created with params {content}\n"
     except utils.InputError as e:
         return flask.Response(e.message, status = 400, mimetype='text/plain')
@@ -88,7 +91,7 @@ def main():
     logging.debug("initialising metrics")
     metrics.initMetrics(application)
     logging.debug("initialising database")
-    db.initDb("local") # TODO config
+    db.initDb(config.get("DB", "MODE"))
 
     logging.debug("application ready")
     global initFinalised

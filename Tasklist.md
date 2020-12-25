@@ -11,7 +11,7 @@
 * (/) `Vote` endpoint dummily accepting parameters
 * (/) In-memory DB added to dependencies and initialised with a test write, as a part of readiness probe
 * (/) DDL statements
-* () `Create` endpoint to check if pollId is free and persist its input parameters
+* (/) `Create` endpoint to check if pollId is free and persist its input parameters
 * () `Vote` endpoint to check first whether the voter is elligible and pollName exists
 * () `Vote` endpoint to persist its input parameters according to poll's settings
 * () Externally specifiable config file
@@ -36,3 +36,8 @@
 
 ## 5. Rewritten to EKS
 * () TBD
+
+## 6. Generic Improvements / Bugs
+* () Introduce SQLAlchemy
+* () Proper Type Hints
+* () Solve the double stdout logging
