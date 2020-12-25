@@ -11,6 +11,6 @@ source `conda info --base`/etc/profile.d/conda.sh
 conda activate private-voter
 
 
-export FLASK_APP="webapp/src/app.py"
+export FLASK_APP="webapp/privateVoterFront"
 
 python -m flask run --host='0.0.0.0' --port=80

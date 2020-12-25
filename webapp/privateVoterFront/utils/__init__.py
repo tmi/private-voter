@@ -1,11 +1,11 @@
-import metrics
 import logging
 import flask
 import collections
 import random
 from typing import Dict, Any, NamedTuple, Type, Callable, TypeVar, Tuple, List
-import config
 import uuid
+import privateVoterFront.config as config
+import privateVoterFront.metrics as metrics
 
 class PollParams(NamedTuple):
     pollId: str

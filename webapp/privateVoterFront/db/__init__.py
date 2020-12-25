@@ -1,7 +1,7 @@
 import sqlite3
-from utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote, VoterReport, VotedReport
 from typing import Any, List
 import logging
+from privateVoterFront.utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote, VoterReport, VotedReport
 
 votedTable = """create table voted (
 voted_randomId text primary key,

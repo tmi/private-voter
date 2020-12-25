@@ -1,10 +1,10 @@
 import flask
 import logging
-import config
-import metrics
-import utils
 import json
-import db
+import privateVoterFront.config as config
+import privateVoterFront.metrics as metrics
+import privateVoterFront.utils as utils
+import privateVoterFront.db as db
 
 initFinalised = False
 application = flask.Flask(__name__)

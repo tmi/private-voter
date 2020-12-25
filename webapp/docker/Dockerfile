@@ -11,7 +11,8 @@ RUN mkdir /logs
 
 ADD ./requirements.txt /webapp/requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
-ADD ./src /webapp/src
+# ADD ./src /webapp/src
+ADD privateVoterFront.zip /webapp/
 ADD ./docker/entrypoint.sh /webapp
 
 CMD ["./entrypoint.sh"]

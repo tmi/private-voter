@@ -5,7 +5,7 @@ import sys, io, pkg_resources
 configs = ConfigParser()
 
 def initDefault():
-    with pkg_resources.resource_stream("config", "default.ini") as defaultConfigStream:
+    with pkg_resources.resource_stream("privateVoterFront.config", "default.ini") as defaultConfigStream:
         configs.read_file(io.TextIOWrapper(defaultConfigStream))
 
 def initLogging():

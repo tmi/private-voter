@@ -36,6 +36,7 @@
 * () TBD
 
 ## 6. Generic Improvements / Bugs
+* (/) Fix packaging and distribution
 * () Introduce SQLAlchemy
 * () Proper Type Hints
 * () Solve the double stdout logging
