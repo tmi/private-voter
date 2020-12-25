@@ -12,13 +12,11 @@
 * (/) In-memory DB added to dependencies and initialised with a test write, as a part of readiness probe
 * (/) DDL statements
 * (/) `Create` endpoint to check if pollId is free and persist its input parameters
-* () `Vote` endpoint to check first whether the voter is elligible and pollName exists
-* () `Vote` endpoint to persist its input parameters according to poll's settings
+* (/) `Vote` endpoint to check first whether pollName exists and to persist its input parameters according to poll's settings
+* () `Report` endpoint to return poll's results in an aggregated form
 * () Externally specifiable config file
 * () PyTest + Flask test suite
-* () Switch from development to production server
 * () Minikube deployment (not supporting multi-instance deployment)
-* () Decorators for simplified arg-parse and logging handling
 
 ## 2. Docker replaced with docker-compose and external SQL is introduced
 * () TBD
@@ -41,3 +39,6 @@
 * () Introduce SQLAlchemy
 * () Proper Type Hints
 * () Solve the double stdout logging
+* () Specifying the set of actors in advance
+* () Throw differential privacy into the mix by allowing "switch of the true vote" to another option with certain probability
+* () Decorators for simplified arg-parse and logging handling

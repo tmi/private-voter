@@ -7,7 +7,7 @@ export PORT=${2:-$DEFAULT_PORT}
 
 export POLL_ID="testpoll1"
 export VOTER_ID="testvoter"
-export VOTED_ID="option1"
+export VOTED_OPTION="opt1"
 
 export POLLDEF="{\"options\": \"opt1:opt2\", \"extraVotes\": 2 }"
 
@@ -24,36 +24,5 @@ function createPoll() {
 }
 
 function votePoll() {
-        curl -k -XPOST ${URL}:${PORT}/vote/${POLL_ID}?voterId=${VOTER_ID}\&votedId=${VOTED_ID}
+        curl -k -XPOST ${URL}:${PORT}/vote/${1}?voterId=${2}\&votedOption=${3}
 }
-
-echo "Rudimentary checks, all should pass"
-status
-readiness
-createPoll
-votePoll
-
-echo "Missing poll id, all should fail"
-export POLL_ID=""
-createPoll
-votePoll
-
-echo "Duplicate poll id, should fail"
-export POLL_ID="testpoll1"
-createPoll
-
-echo "Missing poll content, should fail"
-export POLL_ID="testpoll2"
-export POLLDEF=""
-createPoll
-
-echo "Wrong extra votes specs, all should fail"
-export POLL_ID="testpollW1"
-export POLLDEF="{\"options\": \"opt1:opt2\", \"extraVotes\": -1 }"
-createPoll
-export POLLDEF="{\"options\": \"opt1:opt2\", \"extraVotesMin\": 3, \"extraVotesMax\": 2 }"
-createPoll
-
-echo "Missing voter id, should fail"
-export VOTER_ID=""
-votePoll

@@ -9,6 +9,7 @@ We have the following privacy/accuracy requirements:
 * The application should be fault-tolerant and scalable.
 
 This application is not expected to see any serious production deploy -- it rather serves as a demonstration of a concept and a programming exercise.
+Also, in such a case, we would presume the actor ID issuing to be handled by an external system -- e.g., OpenID.
 
 ## Design
 Whenever the application receives a vote, in the form of `(actor_id, vote)`, it inserts it into a temporary queue this tuple (plus a randomly generated id to provide deduplication in case of a fault) *alongside* randomly generated votes according to the poll creator's specification, and in a random order.

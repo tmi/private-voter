@@ -69,12 +69,17 @@ def vote(pollName):
 
         utils.assertPredicateReport(bool(pollName), "votePollNameNotPresent", "/vote call missing <pollName> path param")
         voterId = flask.request.args.get('voterId')
-        votedId = flask.request.args.get('votedId')
+        votedOption = flask.request.args.get('votedOption')
         utils.assertPredicateReport(bool(voterId), "voteVoterIdNotPresent", "/vote call missing <voterId> request param")
-        utils.assertPredicateReport(bool(votedId), "voteVotedIdNotPresent", "/vote call missing <votedId> request param")
+        utils.assertPredicateReport(bool(votedOption), "voteVotedOptionNotPresent", "/vote call missing <votedOption> request param")
 
-        # TODO impl
-        return f"ok: in poll {pollName} the voter {voterId} voted for {votedId}\n"
+        logging.debug(f"fetching poll params of poll {pollName}")
+        params = db.getPollParams(pollName) # throws if poll not created
+        voted, voters = utils.privateVotingBusinessLogic(votedOption, voterId, params)
+        logging.debug(f"persisting votes of lengths {len(voted)}, {len(voters)} for {pollName}")
+        db.persistVoting(voted, voters)
+
+        return f"ok: in poll {pollName} the voter {voterId} voted for {votedOption}\n"
     except utils.InputError as e:
         return flask.Response(e.message, status = 400, mimetype='text/plain')
     except Exception as e:

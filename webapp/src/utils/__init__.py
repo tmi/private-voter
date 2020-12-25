@@ -2,7 +2,10 @@ import metrics
 import logging
 import flask
 import collections
-from typing import Dict, Any, NamedTuple, Type, Callable, TypeVar
+import random
+from typing import Dict, Any, NamedTuple, Type, Callable, TypeVar, Tuple, List
+import config
+import uuid
 
 class PollParams(NamedTuple):
     pollId: str
@@ -23,9 +26,10 @@ def assertPredicateReport(predicate: bool, errorType: str, errorMessage: str) ->
 def parsePollParams(jsonContent: Dict[str, Any], pollName: str) -> PollParams:
     pollName = pollName
     T = TypeVar('T')
+    maxOptionsLength = int(config.get("DB", "MAXOPTLEN"))
     def hasValOfType(content: Dict[str, Any], valName: str, valType: Type[T], extraCheck: Callable[[T], bool]) -> bool:
         return (valName in content) and (type(content[valName]) == valType) and extraCheck(content[valName])
-    assertPredicateReport(hasValOfType(jsonContent, "options", str, lambda s : len(s) > 0), "createPollOptionsMissing", "/create poll call missing 'options' string param")
+    assertPredicateReport(hasValOfType(jsonContent, "options", str, lambda s : len(s) > 0 and len(s) < maxOptionsLength), "createPollOptionsMissing", "/create poll call missing 'options' string param")
     options = jsonContent["options"]
     if (hasValOfType(jsonContent, "extraVotes", int, lambda d: d >= 0)):
         extraVotesMin = jsonContent["extraVotes"]
@@ -38,3 +42,27 @@ def parsePollParams(jsonContent: Dict[str, Any], pollName: str) -> PollParams:
         assertPredicateReport(False, "createPollExtraVotesMissing", "/create poll call missing correct 'extra votes' specification")
     return PollParams(pollName, extraVotesMin, extraVotesMax, options)
 
+class PrivatisedVote(NamedTuple):
+    randomId_voted: str
+    pollId: str
+    votedOption: str
+
+class PublicVote(NamedTuple):
+    randomId_voter: str
+    pollId: str
+    voterId: str
+    isGenerated: int
+
+# so this fction takes a single received vote, augments it with randomly generated votes, splits into a "public" voter part and "private" voted part, and shuffles each independently, to be persisted in respective tables
+def privateVotingBusinessLogic(votedOption: str, voterId: str, pollParams: PollParams) -> Tuple[List[PrivatisedVote], List[PublicVote]]:
+    logging.debug("shuffling and enriching the received vote")
+    extraVotes = random.randint(pollParams.extraVotesMin, pollParams.extraVotesMax)
+    allOptions = list(set(pollParams.options.split(":")))
+    assertPredicateReport(votedOption in allOptions, "voteOptionNotAllowed", "/vote for option that wasnt specified during /create")
+    votedOptions = random.choices(allOptions, k = extraVotes) + [votedOption]
+    voterIds = [(str(uuid.uuid4()), 1) for i in range(extraVotes)] + [(voterId, 0)]
+    privateParts = [PrivatisedVote(str(uuid.uuid4()), pollParams.pollId, votedOption) for votedOption in votedOptions]
+    publicParts = [PublicVote(str(uuid.uuid4()), pollParams.pollId, voterId, isGenerated) for voterId, isGenerated in voterIds]
+    random.shuffle(privateParts)
+    random.shuffle(publicParts)
+    return (privateParts, publicParts)

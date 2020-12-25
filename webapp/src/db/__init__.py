@@ -1,13 +1,14 @@
 import sqlite3
-from utils import PollParams, assertPredicateReport
-from typing import Any
+from utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote
+from typing import Any, List
 import logging
 
 votedTable = """create table voted (
 voted_randomId text primary key,
 pollId text,
-votedId text
+votedOption text
 )"""
+votedInsert = "insert into voted(voted_randomId, pollId, votedOption) values (?, ?, ?)"
 
 voterTable = """create table voter (
 voter_randomId text primary key,
@@ -15,6 +16,7 @@ pollId text,
 voterId text,
 isGenerated integer
 )"""
+voterInsert = "insert into voter(voter_randomId, pollId, voterId, isGenerated) values (?, ?, ?, ?)"
 
 pollsTable = """create table polls (
 pollId text primary key,
@@ -23,6 +25,7 @@ extraVotesMax integer,
 options text
 )"""
 pollsInsert = "insert into polls(pollId, extraVotesMin, extraVotesMax, options) values (?, ?, ?, ?)"
+pollsFetch = "select * from polls where pollId = ?"
 
 # for readiness probe
 testTable = """create table test (
@@ -68,3 +71,17 @@ def persistCreatePoll(pollParams: PollParams) -> None:
         c.commit()
     except sqlite3.IntegrityError as e: # TODO this will be a problem when introducing more dbs
         assertPredicateReport(False, "createPollDuplicateId", "/create poll not possible because a poll of such name already exists")
+
+def getPollParams(pollName) -> PollParams:
+    c = getConnection()
+    result = c.execute(pollsFetch, (pollName,)).fetchone()
+    if not result:
+        assertPredicateReport(False, "votePollNotExists", "/vote attempted for a non-existent poll, what a trickery!")
+    else:
+        return PollParams(result[0], result[1], result[2], result[3])
+
+def persistVoting(voted: List[PrivatisedVote], voters: List[PublicVote]) -> None:
+    c = getConnection()
+    c.executemany(voterInsert, ((e.randomId_voter, e.pollId, e.voterId, e.isGenerated) for e in voters))
+    c.executemany(votedInsert, ((e.randomId_voted, e.pollId, e.votedOption) for e in voted))
+    c.commit()
