@@ -34,6 +34,7 @@ rowId integer primary key,
 value integer
 )"""
 readinessStatement = """insert into test(rowId, value) values (0, 0) on conflict(rowId) do update set value=value+1"""
+versionStatement = """select sqlite_version();"""
 
 # TODO this whole module needs a refact
 # TODO we are using a single connection due to how in mem sqlite3 works
@@ -63,7 +64,11 @@ def initDb(mode: str) -> None:
         initLocalDb()
 
 def readinessCall() -> bool:
-    getConnection().execute(readinessStatement)
+    try:
+        getConnection().execute(readinessStatement)
+    except sqlite3.OperationalError as e:
+        v = getConnection().execute(versionStatement).fetchone()
+        raise Exception(f"received operational error {e} ({e.args[0]}), with version being {v}")
     return True
 
 def persistCreatePoll(pollParams: PollParams) -> None:
