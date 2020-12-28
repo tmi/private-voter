@@ -1,6 +1,9 @@
 from configparser import ConfigParser
 import logging
-import os, sys, io, pkg_resources
+import os
+import sys
+import io
+import pkg_resources
 
 configs = ConfigParser()
 

@@ -17,6 +17,7 @@
 * (/) Externally specifiable config file
 * (/) PyTest + Flask test suite
 * (/) Publish to dockerhub
+* (/) Flake8 linting
 * () Explore GitHub-DockerHub continuous integration
 * () Minikube deployment (not supporting multi-instance deployment)
 

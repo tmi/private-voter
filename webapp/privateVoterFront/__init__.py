@@ -29,7 +29,8 @@ def readinessCall():
         if (not initFinalised):
             return flask.Response("init not finalised\n", status = 400, mimetype = 'text/plain')
         if (not db.readinessCall()):
-            return flask.Response("database not ready\n", status = 400, mimetype = 'text/plain') # probably extraneous as unready database raises
+            # probably extraneous as unready database raises
+            return flask.Response("database not ready\n", status = 400, mimetype = 'text/plain')
         return flask.Response("all ready\n", status = 200, mimetype = 'text/plain')
     except Exception as e:
         return flask.Response(f"/readiness call failed due to {e}", status = 400, mimetype = 'text/plain')
@@ -44,10 +45,13 @@ def createPoll(pollName):
 
         utils.assertPredicateReport(bool(pollName), "createPollNameNotPresent", "/create call missing <pollName> path param")
 
-        utils.assertPredicateReport(flask.request.content_type == 'application/json' and flask.request.is_json, "createPollContentNotPresent", "/create call missing the json body")
+        utils.assertPredicateReport(
+            flask.request.content_type == 'application/json' and flask.request.is_json,
+            "createPollContentNotPresent", "/create call missing the json body"
+        )
         try:
             content = json.loads(flask.request.get_data())
-        except json.decoder.JSONDecodeError as e:
+        except json.decoder.JSONDecodeError:
             utils.assertPredicateReport(False, "createPollContentNotValid", "/create call not having valid json body")
         utils.assertPredicateReport(bool(content), "createPollContentNotPresent", "/create call missing the json body")
 
@@ -71,7 +75,11 @@ def vote(pollName):
         voterId = flask.request.args.get('voterId')
         votedOption = flask.request.args.get('votedOption')
         utils.assertPredicateReport(bool(voterId), "voteVoterIdNotPresent", "/vote call missing <voterId> request param")
-        utils.assertPredicateReport(bool(votedOption), "voteVotedOptionNotPresent", "/vote call missing <votedOption> request param")
+        utils.assertPredicateReport(
+            bool(votedOption),
+            "voteVotedOptionNotPresent",
+            "/vote call missing <votedOption> request param"
+        )
 
         logging.debug(f"fetching poll params of poll {pollName}")
         params = db.getPollParams(pollName) # throws if poll not created
@@ -108,8 +116,6 @@ def report(pollName):
         logging.error(f"encountered {e}")
         return flask.Response(f"error handling stuff because of {e}\n", status = 400, mimetype='text/plain')
 
-
-
 def main():
     logging.debug("application starting")
 
@@ -125,5 +131,6 @@ def main():
     logging.debug("application ready")
     global initFinalised
     initFinalised = True
+
 
 main()

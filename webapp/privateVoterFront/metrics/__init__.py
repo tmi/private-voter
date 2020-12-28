@@ -2,7 +2,11 @@ import prometheus_client
 from flask import Response
 # from prometheus_client import Counter
 
-httpEndpointCounter = prometheus_client.Counter("privateVoter_httpEndpointCounter", "Counter for http endpoints", ['method', 'endpoint'])
+httpEndpointCounter = prometheus_client.Counter(
+    "privateVoter_httpEndpointCounter",
+    "Counter for http endpoints",
+    ['method', 'endpoint']
+)
 errorCounter = prometheus_client.Counter("privateVoter_errorCounter", "Counter for errors", ['errorType'])
 
 def initMetrics(application):

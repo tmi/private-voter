@@ -1,6 +1,5 @@
 import sqlite3
-from typing import Any, List
-import logging
+from typing import List
 from privateVoterFront.utils import PollParams, assertPredicateReport, PrivatisedVote, PublicVote, VoterReport, VotedReport
 
 votedTable = """create table voted (
@@ -18,7 +17,7 @@ pollId text,
 voterId text
 )"""
 voterInsert = "insert into voter(voter_randomId, pollId, voterId) values (?, ?, ?)"
-voterReport = "select count(distinct voterId) as realVoters, sum(voterId is not null) as realVotes, count(1) as totalVotes from voter where pollId = ?"
+voterReport = "select count(distinct voterId) as realVoters, sum(voterId is not null) as realVotes, count(1) as totalVotes from voter where pollId = ?" # noqa: 501
 
 pollsTable = """create table polls (
 pollId text primary key,
@@ -49,7 +48,8 @@ def shutdown():
 
 def initLocalDb() -> None:
     global connection
-    connection = sqlite3.connect(':memory:', check_same_thread = False) # we presume sqlite to be thread-safe compiled as that is the default
+    # we presume sqlite to be thread-safe compiled as that is the default
+    connection = sqlite3.connect(':memory:', check_same_thread = False)
 
     # possibly to be done in the main method, if made robust
     connection.execute(testTable)
@@ -71,8 +71,12 @@ def persistCreatePoll(pollParams: PollParams) -> None:
         c = getConnection()
         c.execute(pollsInsert, (pollParams.pollId, pollParams.extraVotesMin, pollParams.extraVotesMax, pollParams.options))
         c.commit()
-    except sqlite3.IntegrityError as e: # TODO this will be a problem when introducing more dbs
-        assertPredicateReport(False, "createPollDuplicateId", "/create poll not possible because a poll of such name already exists")
+    except sqlite3.IntegrityError: # TODO this will be a problem when introducing more dbs
+        assertPredicateReport(
+            False,
+            "createPollDuplicateId",
+            "/create poll not possible because a poll of such name already exists"
+        )
 
 def getPollParams(pollName) -> PollParams:
     c = getConnection()
