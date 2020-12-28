@@ -9,8 +9,6 @@ jobs:
        with:
          python-version: 3.7.9
      - run: |
-         apt-get update
-         apt-get upgrade sqlite3
          python -m pip install --upgrade pip
          pip install -r webapp/requirements.txt
          pip install pytest==6.2.1 flake8==3.8.4
