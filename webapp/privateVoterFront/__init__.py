@@ -35,7 +35,7 @@ def readinessCall():
             return flask.Response("database not ready\n", status = 400, mimetype = 'text/plain')
         return flask.Response("all ready\n", status = 200, mimetype = 'text/plain')
     except Exception as e:
-        logging.error(f"/readiness call failed due to {e}")
+        logging.exeption(f"/readiness call failed due to {e}")
         return flask.Response(f"/readiness call failed due to {e}", status = 400, mimetype = 'text/plain')
 
 
