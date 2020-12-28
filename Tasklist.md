@@ -16,6 +16,8 @@
 * (/) `Report` endpoint to return poll's results in an aggregated form
 * (/) Externally specifiable config file
 * (/) PyTest + Flask test suite
+* (/) Publish to dockerhub
+* () Explore GitHub-DockerHub continuous integration
 * () Minikube deployment (not supporting multi-instance deployment)
 
 ## 2. Docker replaced with docker-compose and external SQL is introduced

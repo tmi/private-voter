@@ -24,3 +24,6 @@ This can be further strengthened by a process that updates/re-creates record in 
 3. App separated into two plus queue is introduced
 4. AWS deployment is prepared via ECS, Kinesis, Aurora
 5. Rewritten to EKS
+
+## Links
+* [docker hub](https://hub.docker.com/repository/docker/vojtatuma/private-voter)
