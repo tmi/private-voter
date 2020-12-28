@@ -67,8 +67,10 @@ def readinessCall() -> bool:
     try:
         getConnection().execute(readinessStatement)
     except sqlite3.OperationalError as e:
-        v = getConnection().execute(versionStatement).fetchone()
-        raise Exception(f"received operational error {e} ({e.args[0]}), with version being {v}")
+        vs = getConnection().execute(versionStatement).fetchone()
+        import platform
+        vp = platform.python_version()
+        raise Exception(f"received operational error {e} ({e.args[0]}), with sqlite version being {vs} and python version being {vp}") # noqa: 501
     return True
 
 def persistCreatePoll(pollParams: PollParams) -> None:

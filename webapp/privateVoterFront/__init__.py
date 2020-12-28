@@ -27,11 +27,11 @@ def readinessCall():
 
         global initFinalised
         if (not initFinalised):
-            logging.error(f"/readiness call failed due to init not finalised")
+            logging.error("/readiness call failed due to init not finalised")
             return flask.Response("init not finalised\n", status = 400, mimetype = 'text/plain')
         if (not db.readinessCall()):
             # probably extraneous as unready database raises
-            logging.error(f"/readiness call failed due to database not ready")
+            logging.error("/readiness call failed due to database not ready")
             return flask.Response("database not ready\n", status = 400, mimetype = 'text/plain')
         return flask.Response("all ready\n", status = 200, mimetype = 'text/plain')
     except Exception as e:
