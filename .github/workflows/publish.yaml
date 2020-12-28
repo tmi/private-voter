@@ -13,6 +13,6 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_ACCESS }}
           repository: vojtatuma/private-voter
           tag_with_ref: true

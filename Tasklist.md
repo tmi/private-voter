@@ -19,7 +19,7 @@
 * (/) Publish to dockerhub
 * (/) Flake8 linting
 * (/) Explore GitHub Actions for continuous testing
-* () Explore GitHub Actions for DockerHub push
+* (/) Explore GitHub Actions for DockerHub push
 * () Minikube deployment (not supporting multi-instance deployment)
 
 ## 2. Docker replaced with docker-compose and external SQL is introduced
