@@ -33,7 +33,10 @@ testTable = """create table test (
 rowId integer primary key,
 value integer
 )"""
-readinessStatement = """insert into test(rowId, value) values (0, 0) on conflict(rowId) do update set value=value+1"""
+# this was used originally, but for some reason I'm not able to have the github agent's sqlite version updated to 3.2<something> that supports upserts...
+# readinessStatement = """insert into test(rowId, value) values (0, 0) on conflict(rowId) do update set value=value+1"""
+readinessStatement = """update test set value = value + 1 where rowId = 0"""
+testTableFeed = """insert into test(rowId, value) values (0, 0)"""
 versionStatement = """select sqlite_version();"""
 
 # TODO this whole module needs a refact
@@ -54,6 +57,7 @@ def initLocalDb() -> None:
 
     # possibly to be done in the main method, if made robust
     connection.execute(testTable)
+    connection.execute(testTableFeed)
     connection.execute(voterTable)
     connection.execute(votedTable)
     connection.execute(pollsTable)
@@ -65,13 +69,16 @@ def initDb(mode: str) -> None:
 
 def readinessCall() -> bool:
     try:
-        getConnection().execute(readinessStatement)
+        r = getConnection().execute(readinessStatement).rowcount
+        if (r == 1):
+            return True
+        else:
+            return False
     except sqlite3.OperationalError as e:
         vs = getConnection().execute(versionStatement).fetchone()
         import platform
         vp = platform.python_version()
         raise Exception(f"received operational error {e} ({e.args[0]}), with sqlite version being {vs} and python version being {vp}") # noqa: 501
-    return True
 
 def persistCreatePoll(pollParams: PollParams) -> None:
     try:
