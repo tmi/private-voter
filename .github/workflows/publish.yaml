@@ -22,4 +22,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS }}
           repository: vojtatuma/private-voter
           tag_with_ref: true
+          tags: latest
           dockerfile: webapp/docker/Dockerfile
